@@ -1,0 +1,148 @@
+a:link{
+    color: #f94572;
+}
+
+a:visited{
+    color: #f94572;
+}
+
+a:hover{ 
+    color: #ff6b8f;
+}
+
+body{
+  background: #111;
+  /* Text defaults */
+  font-family: 'Muli', sans-serif;
+  color: white;
+}
+
+#wrap{
+  width: 640px;
+  margin: 0 auto;
+  position: relative;
+  display: block;
+}
+
+#logo_header{
+  height: 150px;
+}
+
+#canvas{
+  position: relative;
+  display: block;
+  margin: 0 auto;
+  border-radius: 5px;
+  cursor: url(img/cursor.png), pointer;
+}
+
+
+.nodrag{
+  /* Make image undraggable */
+  user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+h4{
+  margin: 0px;
+}
+
+/* Overlay login */
+#backdrop{
+  height:100vh;
+  width: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background: rgba(0,0,0,0.8);
+  z-index: 100;
+}
+#overlay{
+  position: relative;
+  margin: 0 auto;
+  display: block;
+  width: 400px;
+  top: 20px;
+}
+
+input[type="checkbox"]{
+  position: relative;
+  top: 3px;
+  transform: scale(1.5);
+}
+
+input[type="text"], input[type="password"]{
+  height: 30px;
+  border-radius: 5px;
+  border: none;
+  padding: 5px;
+  font-weight: 600;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+button{
+  min-width: 100px;
+  border-radius: 5px;
+  height: 40px;
+  padding: 5px;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+  margin-top: 6px;
+  margin-bottom: 6px;
+  background: #cc3960;
+  border: none;
+  cursor: pointer;
+  color: white;
+  position: relative;
+  transition: transform 0.05s, background 0.05s;
+}
+
+button:hover{
+  transform: scale(1.05);
+}
+button:active{
+  transform: scale(0.95);
+}
+
+button, input:focus {outline:0;}
+
+/* Stolen from overstacked */
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+#insert-status{
+  position: relative;
+  float: right;
+}
+#under-bar{
+  position: relative;
+  top: 5px;
+}
+#online-status{
+  height: 20px;
+  width: 20px;
+  display: inline-block;
+  border-radius: 20px;
+  background: #f44242; 
+  top: 4px;
+  position: relative;
+}
+#drop-down{
+  height: 20px;
+  top: 10px;
+  position: relative;
+  cursor: pointer;
+}
+

@@ -1,0 +1,56 @@
+
+  SIGNUP:
+  
+    <div id="backdrop">
+    <div id="overlay">
+    <br>
+    <h4>Sign up to Bird Club™ Pre Alpha</h4><br>
+    <a href="#">Already a member?</a><br><br>
+    Username:<br>
+    <input id="username" placeholder="Username" type="text"><br>
+    Pin (password):<br>
+    <input id="pin" placeholder="123456" type="password"><br>
+    <button class="btn" onclick="register()">Become a member!</button>
+    <div id="err_message"></div>
+    </div></div>
+    
+    ONE LINE:
+    <div id="backdrop"> <div id="overlay"> <br> <h4>Sign up to Bird Club™ Pre Alpha</h4><br> <a href="#">Already a member?</a><br><br> Username:<br> <input id="username" placeholder="Username" type="text"><br> Pin (password):<br> <input id="pin" placeholder="123456" type="password"><br> <button class="btn" onclick="register()">Become a member!</button> <div id="err_message"></div> </div></div>
+    
+    
+  LOGIN:
+  
+    <div id="backdrop">
+    <div id="overlay">
+    <br>
+    <h4>Login to Bird Club™ Pre Alpha</h4><br>
+    <a href="#">Not a member?</a><br><br>
+    Username:<br>
+    <input id="username" placeholder="Username" type="text"><br>
+    Pin:<br>
+    <input id="pin" placeholder="123456" type="password"><br>
+    Kepp me logged in: <input type="checkbox"><br>
+    <button class="btn" onclick="register()">Login!</button>
+    <div id="err_message"></div>
+    </div></div>
+    
+    ONE LINE:
+    <div id="backdrop"> <div id="overlay"> <br> <h4>Login to Bird Club™ Pre Alpha</h4><br> <a href="#">Not a member?</a><br><br> Username:<br> <input id="username" placeholder="Username" type="text"><br> Pin:<br> <input id="pin" placeholder="123456" type="password"><br> Kepp me logged in: <input type="checkbox"><br> <button class="btn" onclick="register()">Login!</button> <div id="err_message"></div> </div></div>
+  
+  
+  ERR MESSAGES:
+  
+    SIGNUP:
+      Ops, that username is already registered!
+      Pin needs to be at least 4 numbers long!
+      Success! You can now login here: [LINK]
+    
+    LOGIN:
+      Ow, wrong pin!
+      This username is not registered.
+      
+  
+  
+  
+  
+  
