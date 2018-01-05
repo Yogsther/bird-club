@@ -2,7 +2,7 @@
  * Bird Cloud mmo script
  */
 
-var socket = io.connect("http://213.66.254.63:3074"); // Connect to server
+var socket = io.connect("https://213.66.254.63:3074", {secure: true}); // Connect to server
 
 
 /* Declare canvas */
