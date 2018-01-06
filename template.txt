@@ -49,7 +49,27 @@
       Ow, wrong pin!
       This username is not registered.
       
-  
+      
+    CHAT MESSAGE TEMPLATE:
+    
+      <div class="chat-message"><span class="prefix">[MOD]</span><span class="chat-username">Olle:</span><span class="chat-message-only">Test message boiiiiii!!!</span></div>
+      
+      
+      
+  BACKPACK OVERLAY
+    <div id="backpack" class="noselect">
+        
+          <img src="img/bird_01.png" id="bird-preview" class="nodrag">
+          <div id="backpack-grid">
+            <div class="item-slot">
+              <img class="item-preview" src="">
+            </div>
+          </div>
+        </div>
+    
+    
+    ONLINE
+    <div id="backpack" class="noselect"> <img src="img/bird_01.png" id="bird-preview" class="nodrag"> <div id="backpack-grid"> <div class="item-slot"> <img class="item-preview" src=""> </div> </div> </div>
   
   
   

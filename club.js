@@ -8,7 +8,7 @@ var socket = io.connect("http://213.66.254.63:3074"); // Connect to server
 /* Declare canvas */
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-ctx.save();
+
 
 /* Declare global variables */
 var loggedIn = false;
@@ -53,23 +53,32 @@ document.body.addEventListener("keydown", function(key){
     if(showingSignup){
       signup();
       return;
-    } 
-    if(showLogin) loginFromPage();
-  } else {
-    if(keysDown.indexOf(key.keyCode) == -1) keysDown.push(key.keyCode); 
-  }
-})
-
-document.body.addEventListener("keyup", function(key){
-  for(var i = 0; i < keysDown.length; i++){
-    if(keysDown[i] == key.keyCode) keysDown.splice(i, 1);
+    } else if(showingLogin){
+      loginFromPage();
+    } else {
+    // Send chat message
+    sendMessage();
+    }
   }
 });
+
+
+var lastSentOrientation = 0;
 
 /* Mouse poistion handler */
 var mousePos;
 canvas.addEventListener("mousemove", function(event){
   mousePos = getMousePos(canvas, event); // Update mousePos every time the mouse moves.
+  if(mousePos.x > myPosition.x){
+    orientation = 0;
+  } else {
+    orientation = 1;
+  }
+  if(lastSentOrientation !== orientation){
+    tickMove();
+    lastSentOrientation = orientation;
+  }
+  
 });
 
 function getMousePos(canvas, evt) {
@@ -87,16 +96,20 @@ canvas.addEventListener("click", function(event){
 
 var waypointPosition = {x: myPosition.x, y: myPosition.y};
 var waypointActive = false;
+var waypointRotation = 0;
+var waypointScale = 1;
 
 function addWaypoint(x, y){
   if(y < 86) return;
   waypointPosition = {x: x, y: y};
   waypointActive = true;
+  waypointRotation = 0;
+  waypointScale = 1;
+  
 }
 
 var lastPos = {};
 function moveToWaypoint(){
-  // TODO Pathfinding
   /*
   This code will just correct the poistion of the player to the position of the waypoint.
   Straight forward pathfinding, and this may be enough. I don't know - I guess movement will be
@@ -112,7 +125,6 @@ function moveToWaypoint(){
   }
   if(waypointPosition.x > myPosition.x){
     myPosition.x += speed_x;
-    orientation = 0;
   }
   if(waypointPosition.y > myPosition.y){
     myPosition.y += speed_y;
@@ -123,7 +135,6 @@ function moveToWaypoint(){
 
   if(waypointPosition.x < myPosition.x){
     myPosition.x -= speed_x;
-    orientation = 1;
   }
   if(lastPos.x == myPosition.x && lastPos.y == myPosition.y){
     waypointActive = false;
@@ -139,6 +150,22 @@ function moveToWaypoint(){
 
 }
 
+canvas.addEventListener('contextmenu', event => event.preventDefault());
+
+function drawImage(image, x, y, scale, rotation){
+    ctx.setTransform(scale, 0, 0, scale, x, y); // sets scale and origin
+    ctx.rotate(rotation);
+    ctx.drawImage(image, -image.width / 2, -image.height / 2);
+} 
+
+function tickMove(){
+  socket.emit("move", {
+      x: myPosition.x,
+      y: myPosition.y,
+      orientation: orientation
+    });
+}
+
 function heartbeat(){
   
   
@@ -149,13 +176,9 @@ function heartbeat(){
   }
   
   /* Handle movement */
-  if(waypointPosition.x != myPosition.x || waypointPosition.y != myPosition.y){
+  if(waypointActive){
     moveToWaypoint();
-    socket.emit("move", {
-      x: myPosition.x,
-      y: myPosition.y,
-      orientation: orientation 
-    });
+    tickMove();
   }
   
   // Update status
@@ -201,9 +224,17 @@ function heartbeat(){
 
   }
   if(waypointActive){
-    var waypointWidth = texture_waypoint.width;
-    var offset = waypointWidth / 4;
-    ctx.drawImage(texture_waypoint, waypointPosition.x - offset, waypointPosition.y - offset, 50, 50);
+    
+    if(orientation == 1){
+      waypointRotation -= 0.1;
+    } else {
+      waypointRotation += 0.1;
+    }
+    if(waypointScale > 0.5) waypointScale -= 0.1;
+    var offset = 10; // Offset removed.
+    ctx.save();
+    drawImage(texture_waypoint, waypointPosition.x - offset, waypointPosition.y, waypointScale, waypointRotation);
+    ctx.restore();
   }
   
   requestAnimationFrame(heartbeat);
@@ -263,6 +294,7 @@ socket.on("callback_loggedIn", function(data){
       y: data.y
     }
   waypointPosition = myPosition;
+  loadChat(data.chat);
 
 })
 
@@ -290,6 +322,67 @@ function showLogin(){
 }
 
 
+/* Other, non-main functions */
+
+function loadChat(chat){
+  for(var i = 0; i < chat.length; i++){
+    addChatMessage(chat[i]);
+  }
+}
+
+function addChatMessage(message){
+  var chatWindow = document.getElementById("chat-window");
+  
+  chatWindow.innerHTML += '<div class="chat-message" color="red"><span class="prefix" color="">[MOD]</span><span class="chat-username">' + message.username + ':</span><span class="chat-message-only">' + message.message + '</span></div>';
+  
+  
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+  
+}
+
+socket.on("chat_update", function(message){
+  addChatMessage(message);
+})
+
+function sendMessage(){
+  var chatMessage = document.getElementById("chat-input").value;
+  if(chatMessage == "") return;
+  socket.emit("chat", {
+    username: readCookie("username"),
+    pin: readCookie("pin"),
+    message: chatMessage
+  });
+  console.log("Sent message");
+  document.getElementById("chat-input").value = "";
+}
+
+var backpackUp = false;
+function toggleBackpack(){
+  if(backpackUp){
+    clearBackpack();
+    backpackUp = false;
+  } else {
+    overlayBackpack();
+    backpackUp = true;
+  }
+}
+
+function overlayBackpack(){
+  document.getElementById("backpack-icon").src = "img/backpack_open.png";
+  var backpack = '<div id="backpack" class="noselect"> <img src="img/bird_01.png" id="bird-preview" class="nodrag"><div id="backpack-grid">  </div></div>';
+
+  // TODO Insert inventory <img class="item-preview" src="">
+  
+  document.getElementById("backpack-overlay").innerHTML = backpack;
+  for(var i = 0; i < 48; i++){
+    document.getElementById("backpack-grid").innerHTML += '<div class="item-slot" id="backpack_slot_' + i + '"></div>';
+  }
+}
+
+function clearBackpack(){
+  document.getElementById("backpack-icon").src = "img/backpack_closed.png";
+  document.getElementById("backpack-overlay").innerHTML = "";
+}
 
 function createCookie(name,value,days) {
     var expires = "";

@@ -12,6 +12,7 @@ var server = app.listen(3074, function(){
   console.log("Started server on port 3074");
 });
 
+var chat = [];
 
 // Static files
 
@@ -51,7 +52,24 @@ io.on("connection", function(socket){
   }
 });
   
-  
+  socket.on("chat", function(package){
+    // On chat messages or commands
+    
+    // TODO Add profanity filter
+    
+    var account = loadAccount(package.username)
+    if(account === false) return;
+    if(account.pin != package.pin) return;
+    
+    package.username = account.orgUsername;
+    package.authority = account.authority;
+    
+    chat.push(package);
+    io.emit("chat_update", package);
+    if(chat.length > 20){
+      chat.splice(0, 1); // Trim the chat.
+    }
+  })
   
   socket.on('disconnect', function(){
     
@@ -91,6 +109,7 @@ function saveAccount(username, x, y){
   account.lastX = x;
   account.lastY = y;
   account = JSON.stringify(account);
+  account.lastOnline = Date.now();
   fs.writeFileSync("accounts/"+username+".txt", account);
 }
 
@@ -119,8 +138,10 @@ function loginAccount(username, pin, socket){
     io.sockets.connected[socket].emit("callback_loggedIn", {
       x: account.lastX,
       y: account.lastY,
-      username: account.orgUsername
+      username: account.orgUsername,
+      chat: chat
     });
+    
     loggedInUsers.push({socket: socket, username: account.username}); // Load user session token
     worldData.push({username: username, orgUsername: account.orgUsername, skin: account.skin, x: account.lastX, y: account.lastY}); // Load user into the world.
     return;
@@ -143,7 +164,7 @@ function createAccount(username, pin, socket){
   
   /* TODO Skin selection, temp fix random skin */
   var skin = Math.floor(Math.random()*3)+1;
-  var newAccTemplate = JSON.stringify({username: username, pin: pin, orgUsername: orgUsername ,joinedDate: Date.now(), lastX: 340, lastY: 210, inventory: null, skin: skin});
+  var newAccTemplate = JSON.stringify({username: username, pin: pin, orgUsername: orgUsername ,joinedDate: Date.now(), lastX: 340, lastY: 210, inventory: "", skin: skin, authority: none, condition: "good"});
   fs.writeFileSync("accounts/"+username+".txt", newAccTemplate);
   io.sockets.connected[socket].emit("err", "<span style='color:#53ed55'>Success! You are now a member of the Bird Club. <a href='javascript:showLogin()'>You can now login</a></span>");
   // Account has been created.

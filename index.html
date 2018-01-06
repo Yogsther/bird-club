@@ -2,10 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Bird Club</title>
+    <title>Bird Club Alpha</title>
     <link rel="stylesheet" href="style.css"> <!-- Main style -->
     <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet"> <!-- Deafult font -->
     <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- Mobile friendly scaling -->
+    <script src="variables.js"></script> <!-- Import variables -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script> <!-- Socket.io -->
   </head>
   <body>
@@ -15,12 +16,20 @@
   <div id="wrap"> <!-- Main wrap / slimmer -->
 
     <img src="img/logo_pre_ahlpa_production.png" class="noselect nodrag" alt="Header Logo" id="logo_header"> <!-- Logo -->
+      <span id="backpack-overlay">
+      </span>
     <canvas id="canvas" width="640" height="360"></canvas> <!-- Game canvas -->
-    
     <div id="under-bar" class="noselect">
     <div id="online-status" title="Server Offline."></div>
     <span id="insert-online-users"></span>
-    <span id="insert-status"></span>
+      <span id="inventory-toggle"><a href="javascript:toggleBackpack()">Backpack</a><img src="img/backpack_closed.png" id="backpack-icon" class="backpack" onclick="toggleBackpack()"></span>
+    </div>
+    
+    <div id="chat-log">
+      <div id="chat-window"></div>
+      <input id="chat-input" type="text" placeholder="Chat | Hit enter to send a message!"> <!-- Chat input -->
+      <div id="friends-window"></div>
+      <span id="insert-status"></span>
     </div>
     
   </div>
