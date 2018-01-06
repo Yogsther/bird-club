@@ -1,6 +1,6 @@
 ![Banner](https://i.imgur.com/rAB18tJ.png)
 # Welcome to Bird Club! The nice, family friendly MMO with great adventures.
-[Sign up for a free life-long membership here! ](https://yogsther.github.io/bird-club/)
+[Sign up for a free life-long membership here! ](http://bird.livingforit.xyz)
 
 
 ## Features coming soon
