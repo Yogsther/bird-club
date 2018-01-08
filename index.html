@@ -17,6 +17,18 @@
 
     <img src="img/logo_pre_ahlpa_production.png" class="noselect nodrag" alt="Header Logo" id="logo_header"> <!-- Logo -->
       <span id="backpack-overlay">
+       
+        <!-- This part is hidden with scale(0) -->
+        <div id="new-item-background">
+          <div id="new-item-background-two">
+          <img id="new-item-banner" src="img/new-item.png">
+          <img id="item-preview-new-item" src="img/bird_01.png">
+            <span id="new-item-tag">Red Bird!</span>
+          <button class="btn" id="ok-button" onclick="clearNewItemAnimation()">OK!</button>
+          </div>
+        </div>
+        <!-- End of "New Item" overlay -->
+        
       </span>
     <canvas id="canvas" width="640" height="360"></canvas> <!-- Game canvas -->
     <div id="under-bar" class="noselect">
@@ -27,7 +39,8 @@
     
     <div id="chat-log">
       <div id="chat-window"></div>
-      <input id="chat-input" type="text" placeholder="Chat | Hit enter to send a message!"> <!-- Chat input -->
+      <div id="command-tips"></div>
+      <input id="chat-input" oninput="chatActive()" type="text" placeholder="Chat | Hit enter to send a message! Use / for commands."> <!-- Chat input -->
       <div id="friends-window"></div>
       <span id="insert-status"></span>
     </div>

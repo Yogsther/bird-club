@@ -168,6 +168,10 @@ function tickMove(){
 
 function heartbeat(){
   
+  if(myPosition.x == undefined || myPosition.y == undefined){
+    myPosition.x = canvas.width/2;
+    myPosition.y = canvas.height/2;
+  }
   
   if(!loggedIn){
     ctx.drawImage(texture_splash, 0,0);
@@ -203,11 +207,19 @@ function heartbeat(){
   // Draw users
   for(var i = 0; i < worldData.length; i++){
     var user = worldData[i];
+    
     var skin = eval("texture_bird_0" + user.skin);
     var offset = 35;
     var x = user.x - (skin.width/7.14) + offset;
     var y = user.y - (skin.height/7.14) + offset;
-
+    
+    /* This code prevents lag and renderes your own character offline with your own positional data. */
+    /* TODO Test this, and make sure it's making for a smoother experience! */
+    if(user.orgUsername.toLowerCase() == account.username){
+      x = myPosition.x - (skin.width/7.14) + offset;
+      y = myPosition.y - (skin.height/7.14) + offset;
+    }
+    
     // Draw usernames and chat overhead.
     ctx.font = "15px Ubuntu";
     ctx.fillStyle = "white";
@@ -293,8 +305,11 @@ socket.on("callback_loggedIn", function(data){
       x: data.x,
       y: data.y
     }
+  showingLogin = false;
+  showingSignup = false;
   waypointPosition = myPosition;
   loadChat(data.chat);
+  window.account = data.account;
 
 })
 
@@ -332,8 +347,18 @@ function loadChat(chat){
 
 function addChatMessage(message){
   var chatWindow = document.getElementById("chat-window");
+  var prefix = {title: "", color: "white"};
   
-  chatWindow.innerHTML += '<div class="chat-message" color="red"><span class="prefix" color="">[MOD]</span><span class="chat-username">' + message.username + ':</span><span class="chat-message-only">' + message.message + '</span></div>';
+  if(message.authority > 0){
+    prefix.title = "[MOD]"
+    prefix.color = "#f44b42";
+  }
+  if(message.authority == 10){
+    prefix.title = "[SERVER]";
+    prefix.color = "#ffffff";
+  } 
+  
+  chatWindow.innerHTML += '<div class="chat-message" color="red"><span class="prefix" color="' + prefix.color + '">' + prefix.title + '</span><span class="chat-username">' + message.username + ':</span><span class="chat-message-only">' + message.message + '</span></div>';
   
   
   chatWindow.scrollTop = chatWindow.scrollHeight;
@@ -352,8 +377,9 @@ function sendMessage(){
     pin: readCookie("pin"),
     message: chatMessage
   });
-  console.log("Sent message");
+  document.getElementById("chat-input").style.fontFamily = "";
   document.getElementById("chat-input").value = "";
+  clearCommands();
 }
 
 var backpackUp = false;
@@ -369,7 +395,7 @@ function toggleBackpack(){
 
 function overlayBackpack(){
   document.getElementById("backpack-icon").src = "img/backpack_open.png";
-  var backpack = '<div id="backpack" class="noselect"> <img src="img/bird_01.png" id="bird-preview" class="nodrag"><div id="backpack-grid">  </div></div>';
+  var backpack = '<div id="backpack" class="noselect"> <img src="img/bird_0' + account.skin + '.png" id="bird-preview" class="nodrag"><div id="backpack-grid">  </div></div>';
 
   // TODO Insert inventory <img class="item-preview" src="">
   
@@ -382,6 +408,59 @@ function overlayBackpack(){
 function clearBackpack(){
   document.getElementById("backpack-icon").src = "img/backpack_closed.png";
   document.getElementById("backpack-overlay").innerHTML = "";
+}
+
+var showingNewItem = false;
+function newItemAnimation(){
+  showingNewItem = true;
+  document.getElementById("new-item-background").style.transform = "scale(1)";
+}
+
+function clearNewItemAnimation(){
+  showingNewItem = false;
+  document.getElementById("new-item-background").style.transform = "scale(0)";
+}
+
+function chatActive(){
+  // Deliver a responsive chat exeprience with command tips when typing.
+  var input = document.getElementById("chat-input");
+  if(input.value[0] === "/"){
+    input.style.fontFamily = "courier";
+    getCommands();
+  } else {
+    input.style.fontFamily = "";
+    clearCommands();
+  }
+}
+
+socket.on("fail", function(message){
+  if(message == "kicked_doublelog"){
+    deleteAllCookies();
+    location.reload();
+  }
+})
+
+function getCommands(input){
+  var input = document.getElementById("chat-input");
+  document.getElementById("command-tips").innerHTML = '';
+  var commands = ["broadcast", "op", "ban", "msg"];
+  var added = 0;
+  for(var i = 0; i < commands.length; i++){
+    if(commands[i].indexOf(input.value.substr(1,input.value.length)) != -1){
+      document.getElementById("command-tips").innerHTML += '<span id="command-insert">/' + commands[i] + '</span><br>';
+      added++;
+    }
+  }
+    var height = 0;
+    if(added > 0) height = ((added-1) * 20 + 60);
+    if(height > 200) height = 200;
+    document.getElementById("command-tips").setAttribute("style","height:" + height + "px"); 
+
+}
+function clearCommands(){
+  document.getElementById("command-tips").setAttribute("style","height:0px");
+  document.getElementById("command-tips").innerHTML = '';
+  console.log("Cleared commands");
 }
 
 function createCookie(name,value,days) {

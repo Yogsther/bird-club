@@ -26,7 +26,7 @@ var loggedInUsers = new Array();
 var worldData = new Array();
 
 io.on("connection", function(socket){
-
+  
   socket.on("signupReq", function(data){
     createAccount(data.username, data.pin, socket.id);
   });
@@ -61,6 +61,22 @@ io.on("connection", function(socket){
     if(account === false) return;
     if(account.pin != package.pin) return;
     
+    if(package.message[0] === "/"){
+      // Message is a command
+      var message = package.message.split(" ");
+      if(message[0] == "/broadcast"){
+        // Broadcast
+        console.log(package.authority);
+        if(account.authority > 0){
+        // Moderator
+        message.splice(0, 1);
+        broadcast(message.join(" "));
+        return;
+        }
+      }
+      
+    }
+    
     package.username = account.orgUsername;
     package.authority = account.authority;
     
@@ -82,6 +98,7 @@ io.on("connection", function(socket){
         for(var i = 0; i < worldData.length; i++){
           if(worldData[i].username == username){
             saveAccount(username, worldData[i].x, worldData[i].y);
+            var account = loadAccount(username);
             worldData.splice(i, 1);
           } // Remove from game world
         }
@@ -89,6 +106,12 @@ io.on("connection", function(socket){
       } 
       
     }
+    var leftMessages = ["has left.", "disappeared.", "flew away.", "left us too early.", "is no longer with us.", "left this world.", "disconnected."];
+    try{
+      broadcast(account.orgUsername + " " + leftMessages[Math.floor(Math.random()*leftMessages.length)]);
+      } catch(e){
+        broadcast("Someone left.");
+      }
   });
      
   
@@ -101,6 +124,20 @@ setInterval(tick, 0.0666);
 
 function tick(){
   io.emit("tick", worldData);
+}
+
+function broadcast(message){
+  var package = {};
+  package.username = "";
+  package.orgUsername = "";
+  package.authority = 10; // Server
+  package.message = message;
+  
+  chat.push(package);
+  io.emit("chat_update", package);
+    if(chat.length > 20){
+      chat.splice(0, 1); // Trim the chat.
+    }
 }
 
 function saveAccount(username, x, y){
@@ -117,8 +154,22 @@ function loginAccount(username, pin, socket){
   var err = null;
   for(var i = 0; i < loggedInUsers.length; i++){
     if(loggedInUsers[i].username == username){
-      io.sockets.connected[socket].emit("err", "This account is already in-game. Please logout on that system first.");
-      return;
+      //io.sockets.connected[socket].emit("err", "This account is already in-game. Please logout on that system first.");
+      // Kick account from the server.
+      for(var i = 0; i < loggedInUsers.length; i++){
+        if(loggedInUsers[i].username === username && pin === loadAccount(username).pin){
+          io.sockets.connected[loggedInUsers[i].socket].emit("fail", "kicked_doublelog");
+          loggedInUsers.splice(i, 1); // Remove session token when user disconnects.
+          for(var i = 0; i < worldData.length; i++){
+          if(worldData[i].username == username){
+            saveAccount(username, worldData[i].x, worldData[i].y);
+            var account = loadAccount(username);
+            worldData.splice(i, 1);
+          } 
+        }
+      }
+    }
+  
     }
   }
   try{
@@ -139,9 +190,11 @@ function loginAccount(username, pin, socket){
       x: account.lastX,
       y: account.lastY,
       username: account.orgUsername,
-      chat: chat
+      chat: chat,
+      account: account
     });
-    
+    var joinedMessages = ["has appeared!", "has joined us.", "flew in.", "popped in.", "entered.", "joined the world.", "has logged on."]
+    broadcast(account.orgUsername + " " + joinedMessages[Math.floor(Math.random()*joinedMessages.length)]);
     loggedInUsers.push({socket: socket, username: account.username}); // Load user session token
     worldData.push({username: username, orgUsername: account.orgUsername, skin: account.skin, x: account.lastX, y: account.lastY}); // Load user into the world.
     return;
@@ -164,7 +217,7 @@ function createAccount(username, pin, socket){
   
   /* TODO Skin selection, temp fix random skin */
   var skin = Math.floor(Math.random()*3)+1;
-  var newAccTemplate = JSON.stringify({username: username, pin: pin, orgUsername: orgUsername ,joinedDate: Date.now(), lastX: 340, lastY: 210, inventory: "", skin: skin, authority: none, condition: "good"});
+  var newAccTemplate = JSON.stringify({username: username, pin: pin, orgUsername: orgUsername ,joinedDate: Date.now(), lastX: 340, lastY: 210, inventory: {}, skin: skin, authority: 0, condition: "good"});
   fs.writeFileSync("accounts/"+username+".txt", newAccTemplate);
   io.sockets.connected[socket].emit("err", "<span style='color:#53ed55'>Success! You are now a member of the Bird Club. <a href='javascript:showLogin()'>You can now login</a></span>");
   // Account has been created.

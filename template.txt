@@ -70,6 +70,20 @@
     
     ONLINE
     <div id="backpack" class="noselect"> <img src="img/bird_01.png" id="bird-preview" class="nodrag"> <div id="backpack-grid"> <div class="item-slot"> <img class="item-preview" src=""> </div> </div> </div>
+    
+    
+  NEW ITEM ANIMATION:
+  
+        <div id="new-item-background">
+          <div id="new-item-background-two">
+          <img id="new-item-banner" src="img/new-item.png">
+          <img id="item-preview-new-item" src="img/bird_01.png">
+            <span id="new-item-tag">Red Bird!</span>
+          <button class="btn" id="ok-button" onclick="clearNewItemAnimation()">OK!</button>
+          </div>
+        </div>
+        
+        <div id="new-item-background"> <div id="new-item-background-two"> <img id="new-item-banner" src="img/new-item.png"> <img id="item-preview-new-item" src="img/bird_01.png"> <span id="new-item-tag">Red Bird!</span> <button class="btn" id="ok-button" onclick="clearNewItemAnimation()">OK!</button> </div> </div>
   
   
   
