@@ -25,14 +25,15 @@ body{
 }
 
 #wrap{
-  width: 640px;
+  width: 960px;
   margin: 0 auto;
   position: relative;
   display: block;
+  height: 900px;
 }
 
 #logo_header{
-  height: 120px;
+  height: 70px;
 }
 
 #canvas{
@@ -172,7 +173,7 @@ button, input:focus {outline:0;}
   height: 190px;
   background: #111;
   top: 45px;
-  width: 386.6px;
+  width: 586.6px;
   left: 20px;
   border-radius: 5px 5px 0px 0px;
   position: absolute;
@@ -182,7 +183,7 @@ button, input:focus {outline:0;}
 
 #chat-input{
   position: absolute;
-  width: 376.6px;
+  width: 576.6px;
   left: 20px;
   background: #282828;
   height: 40px;
@@ -212,7 +213,7 @@ button, input:focus {outline:0;}
   height: 200px;
   background: #111;
   display: inline-block;
-  width: 193.3px;
+  width: 310.3px;
   float: right;
   border-radius: 5px;
   position: absolute;
@@ -249,6 +250,10 @@ button, input:focus {outline:0;}
   background: transparent;
 }
 
+::-webkit-scrollbar {
+    cursor: url(img/cursor.png) 14 0, auto;
+}
+
 
 .chat-message{
   padding: 6px;
@@ -278,28 +283,28 @@ button, input:focus {outline:0;}
 }
 /* Backpack overlay */
 #backpack{
-  height: 360px;
-  width: 640px;
+  height: 540px;
+  width: 960px;
   background: rgba(0,0,0,0.8);
   position: absolute;
-  top: 124px;
+  top: 74px;
   left: 0px;
   border-radius: 5px;
   z-index: 100;
 }
 
 #bird-preview{
-  height: 250px;
-  top: 50px;
+  height: 350px;
+  top: 90px;
   right: 20px;
   position: absolute;
 }
 
 #backpack-grid{
-  height: 300px;
-  width: 350px;
+  height: 460px;
+  width: 440px;
   margin-left: 30px;
-  top: 30px;
+  top: 40px;
   position: relative;
   border-radius: 5px;
   background: rgba(0,0,0,0.5);
@@ -317,6 +322,13 @@ button, input:focus {outline:0;}
   
 }
 
+#pet_preview{
+  position: absolute;
+  height: 150px;
+  right: 300px;
+  top: 50px;
+}
+
 .item-preview{
   height: 70px;
   position: absolute;
@@ -329,8 +341,8 @@ button, input:focus {outline:0;}
   width: 400px;
   background: #DB3E4A;
   position: absolute;
-  top: 169px;
-  left: 120px;
+  top: 200px;
+  left: 280px;
   border-radius: 5px;
   z-index: 100;
   transition: transform 0.2s;

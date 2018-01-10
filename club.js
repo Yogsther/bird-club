@@ -19,6 +19,7 @@ var keysDown = [];
 var myPosition = {};
 var worldData = [];
 var orientation = 0;
+var devmode = false;
 
 var onlineUsers = 0;
 
@@ -55,9 +56,11 @@ document.body.addEventListener("keydown", function(key){
       return;
     } else if(showingLogin){
       loginFromPage();
-    } else {
+    } else if(document.getElementById("chat-input").activeElement) {
     // Send chat message
-    sendMessage();
+      sendMessage();
+    } else {
+      document.getElementById("chat-input").focus();
     }
   }
 });
@@ -78,6 +81,7 @@ canvas.addEventListener("mousemove", function(event){
     tickMove();
     lastSentOrientation = orientation;
   }
+  if(devmode) console.log(mousePos);
   
 });
 
@@ -166,7 +170,12 @@ function tickMove(){
     });
 }
 
+function enableDev(){
+  devmode = true;
+}
+
 function heartbeat(){
+  //console.log(document.getElementById("chat-input").activeElement);
   
   if(myPosition.x == undefined || myPosition.y == undefined){
     myPosition.x = canvas.width/2;
@@ -174,7 +183,7 @@ function heartbeat(){
   }
   
   if(!loggedIn){
-    ctx.drawImage(texture_splash, 0,0);
+    ctx.drawImage(texture_splash,  0, 0, canvas.width, canvas.height);
     requestAnimationFrame(heartbeat);
     return;
   }
@@ -393,19 +402,40 @@ function toggleBackpack(){
   }
 }
 
+function easeInOutQuad(t){ return t<.5 ? 2*t*t : -1+(4-2*t)*t }
+
 function overlayBackpack(){
   document.getElementById("backpack-icon").src = "img/backpack_open.png";
-  var backpack = '<div id="backpack" class="noselect"> <img src="img/bird_0' + account.skin + '.png" id="bird-preview" class="nodrag"><div id="backpack-grid">  </div></div>';
+  var backpack = '<div id="backpack" class="noselect"> <img src="img/pet_1.png" id="pet_preview"><img src="img/bird_0' + account.skin + '.png" id="bird-preview" class="nodrag"><div id="backpack-grid">  </div></div>';
 
   // TODO Insert inventory <img class="item-preview" src="">
+  var petDirection = "down";
+  var petHeight = 50; 
+  var petSpeed = 5;
+  window.petAnimationPreview = setInterval(function(){
+    if(petDirection == "down"){
+      var distance = 100 - petHeight;
+      petSpeed = easeInOutQuad(distance);
+      petHeight += petSpeed;
+    } else {
+      petHeight -= petSpeed;
+    }
+    if(petHeight > 100) petDirection = "up";
+    if(petHeight < 20) petDirection = "down";
+    console.log(petDirection + " | " + petHeight);
+    document.getElementById("pet_preview").style.top = petHeight + "px";
+  }, 50);
   
   document.getElementById("backpack-overlay").innerHTML = backpack;
-  for(var i = 0; i < 48; i++){
+  for(var i = 0; i < 50; i++){
     document.getElementById("backpack-grid").innerHTML += '<div class="item-slot" id="backpack_slot_' + i + '"></div>';
   }
 }
 
+
+
 function clearBackpack(){
+  clearTimeout(petAnimationPreview);
   document.getElementById("backpack-icon").src = "img/backpack_closed.png";
   document.getElementById("backpack-overlay").innerHTML = "";
 }
@@ -443,7 +473,7 @@ socket.on("fail", function(message){
 function getCommands(input){
   var input = document.getElementById("chat-input");
   document.getElementById("command-tips").innerHTML = '';
-  var commands = ["broadcast", "op", "ban", "msg"];
+  var commands = ["broadcast", "op", "ban", "msg", "give"];
   var added = 0;
   for(var i = 0; i < commands.length; i++){
     if(commands[i].indexOf(input.value.substr(1,input.value.length)) != -1){
@@ -460,8 +490,27 @@ function getCommands(input){
 function clearCommands(){
   document.getElementById("command-tips").setAttribute("style","height:0px");
   document.getElementById("command-tips").innerHTML = '';
-  console.log("Cleared commands");
 }
+
+
+
+/* Room methods */
+
+function room_01(){
+  var hitObjects = [{
+    x1: 0,
+    x2: 0,
+    y1: 0,
+    y2: 0,
+    action: "something"
+  }];
+}
+
+
+
+
+
+
 
 function createCookie(name,value,days) {
     var expires = "";

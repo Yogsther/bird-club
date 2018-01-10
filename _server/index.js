@@ -66,15 +66,15 @@ io.on("connection", function(socket){
       var message = package.message.split(" ");
       if(message[0] == "/broadcast"){
         // Broadcast
-        console.log(package.authority);
         if(account.authority > 0){
         // Moderator
         message.splice(0, 1);
         broadcast(message.join(" "));
+        console.log( package.orgUsername + " used broadcast: " + package.message);
         return;
         }
       }
-      
+      return;
     }
     
     package.username = account.orgUsername;
@@ -97,10 +97,10 @@ io.on("connection", function(socket){
 
         for(var i = 0; i < worldData.length; i++){
           if(worldData[i].username == username){
-            saveAccount(username, worldData[i].x, worldData[i].y);
+            saveAccount(username, worldData[i].x, worldData[i].y, worldData[i].room);
             var account = loadAccount(username);
             worldData.splice(i, 1);
-          } // Remove from game world
+          } // Remove from game world 
         }
         break;
       } 
@@ -110,7 +110,7 @@ io.on("connection", function(socket){
     try{
       broadcast(account.orgUsername + " " + leftMessages[Math.floor(Math.random()*leftMessages.length)]);
       } catch(e){
-        broadcast("Someone left.");
+        //broadcast("Someone left.");
       }
   });
      
@@ -140,14 +140,21 @@ function broadcast(message){
     }
 }
 
-function saveAccount(username, x, y){
+function saveAccount(username, x, y, room){
   var account = loadAccount(username);
   if(account === false) return;
   account.lastX = x;
   account.lastY = y;
-  account = JSON.stringify(account);
+  account.lastRoom = room;
   account.lastOnline = Date.now();
+  account = JSON.stringify(account);
   fs.writeFileSync("accounts/"+username+".txt", account);
+}
+
+function giveItem(item, username, amount){
+  if(amount == undefined) amount = 1; // Default amount to 1, usage of giveItem only requires item id and username.
+  
+  
 }
 
 function loginAccount(username, pin, socket){
@@ -162,7 +169,7 @@ function loginAccount(username, pin, socket){
           loggedInUsers.splice(i, 1); // Remove session token when user disconnects.
           for(var i = 0; i < worldData.length; i++){
           if(worldData[i].username == username){
-            saveAccount(username, worldData[i].x, worldData[i].y);
+            saveAccount(username, worldData[i].x, worldData[i].y, worldData[y].room);
             var account = loadAccount(username);
             worldData.splice(i, 1);
           } 
@@ -196,7 +203,7 @@ function loginAccount(username, pin, socket){
     var joinedMessages = ["has appeared!", "has joined us.", "flew in.", "popped in.", "entered.", "joined the world.", "has logged on."]
     broadcast(account.orgUsername + " " + joinedMessages[Math.floor(Math.random()*joinedMessages.length)]);
     loggedInUsers.push({socket: socket, username: account.username}); // Load user session token
-    worldData.push({username: username, orgUsername: account.orgUsername, skin: account.skin, x: account.lastX, y: account.lastY}); // Load user into the world.
+    worldData.push({username: username, orgUsername: account.orgUsername, skin: account.skin, x: account.lastX, y: account.lastY, room: account.lastRoom}); // Load user into the world.
     return;
     
   } else {
@@ -217,10 +224,11 @@ function createAccount(username, pin, socket){
   
   /* TODO Skin selection, temp fix random skin */
   var skin = Math.floor(Math.random()*3)+1;
-  var newAccTemplate = JSON.stringify({username: username, pin: pin, orgUsername: orgUsername ,joinedDate: Date.now(), lastX: 340, lastY: 210, inventory: {}, skin: skin, authority: 0, condition: "good"});
+  var newAccTemplate = JSON.stringify({username: username, pin: pin, orgUsername: orgUsername ,joinedDate: Date.now(), lastX: 340, lastY: 210, inventory: {}, skin: skin, authority: 0, condition: "good", room: 1});
   fs.writeFileSync("accounts/"+username+".txt", newAccTemplate);
   io.sockets.connected[socket].emit("err", "<span style='color:#53ed55'>Success! You are now a member of the Bird Club. <a href='javascript:showLogin()'>You can now login</a></span>");
   // Account has been created.
+  console.log(username + " has joined us! (New User)");
 }
 
 function validateAccount(username, pin){
