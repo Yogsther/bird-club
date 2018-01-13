@@ -153,8 +153,8 @@ function saveAccount(username, x, y, room) {
 
 function giveItem(item, username, amount) {
   if (amount == undefined) amount = 1; // Default amount to 1, usage of giveItem only requires item id and username.
-
-
+  var account = loadAccount(username);
+  account.inventory[item] += 1;
 }
 
 function loginAccount(username, pin, socket) {
@@ -241,7 +241,8 @@ function createAccount(username, pin, socket) {
     joinedDate: Date.now(),
     lastX: 340,
     lastY: 210,
-    inventory: {},
+    inventory: [],
+    unseenItems: [],
     skin: skin,
     authority: 0,
     condition: "good",
@@ -251,6 +252,7 @@ function createAccount(username, pin, socket) {
   io.sockets.connected[socket].emit("err", "<span style='color:#53ed55'>Success! You are now a member of the Bird Club. <a href='javascript:showLogin()'>You can now login</a></span>");
   // Account has been created.
   console.log(username + " has joined us! (New User)");
+  giveItem(username, 1) // Give new Users the Red Pet
 }
 
 function validateAccount(username, pin) {

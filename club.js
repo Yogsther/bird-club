@@ -444,27 +444,15 @@ function overlayBackpack() {
   var backpack = '<div id="backpack" class="noselect"> <img src="img/pet_1.png" id="pet_preview"><img src="img/bird_' + account.skin + '.png" id="bird-preview" class="nodrag"><div id="backpack-grid">  </div></div>';
 
   // TODO Insert inventory <img class="item-preview" src="">
-  var petDirection = "down";
   var petHeight = 50;
-  var petSpeed = 5;
+  var petProgression = 0;
   window.petAnimationPreview = setInterval(function () {
-    if (petDirection == "down") {
-      var distance = (petHeight - 50)/50;
-      distance = 1 - distance;
-      petSpeed = ease(distance) * 20;
-      petHeight += petSpeed;
-    } else {
-      var distance = (50 - (petHeight - 50))/50;
-      distance = 1 + distance;
-      petSpeed = ease(distance) * 20;
-      petHeight -= petSpeed;
-      
-    }
-    console.log(petSpeed);
     
-    if (petHeight > 60) petDirection = "up";
-    if (petHeight < 51) petDirection = "down";
-    //console.log(petDirection + " | Height: " + petHeight+ " | Speed: " + petSpeed + " | Distance: " + distance);
+    /* Pet animation */
+    
+    petHeight = (Math.sin(petProgression)*20)+50;
+    petProgression += 0.2;
+
     document.getElementById("pet_preview").style.top = petHeight + "px";
   }, 50);
 
