@@ -4,7 +4,7 @@
  */
 
 const textures = ["splash.png", "bird_1.png", "bird_2.png", "bird_3.png", "bird_4.png", "tree_01.png",
-                 "waypoint.png", "room_1.png"];
+                 "waypoint.png", "room_1.png", "bird_20.png"];
 
 loadTextures();
 loadItemTextures();

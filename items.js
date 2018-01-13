@@ -6,6 +6,13 @@ const items = [
     texture: "pet_1.png",
     rarity: 1,
     type: "pet"
+  }, {
+    index: 2,
+    name: "Evil Bird",
+    thumbnail: "evil_bird.png",
+    texture: "evil_bird.png",
+    rarity: 4,
+    type: "skin"
   }
 ];
 

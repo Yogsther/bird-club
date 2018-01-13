@@ -353,21 +353,21 @@ function showSignup() {
   document.getElementById("overlay-insert").innerHTML = '<div id="backdrop"> <div id="overlay"> <br> <h4>Sign up to Bird Club™ Pre Alpha</h4><br> <a href="javascript:showLogin()">Already a member?</a><br><br> Username:<br> <input id="username" placeholder="Username" type="text"><br> Pin (password):<br> <input id="pin" placeholder="123456" type="password"><br><div id="choose_bird"></div><br><button class="btn" onclick="signup()">Become a member!</button> <div id="err_message"></div> </div></div>';
   showingSignup = true;
   showingLogin = false;
-  for(var i = 1; i < 5; i++){
+  for (var i = 1; i < 5; i++) {
     // Do 4 times
     document.getElementById("choose_bird").innerHTML += '<img class="choose_bird" src="img/bird_' + i + '.png" onclick="chooseBird(' + i + ')">';
   }
-  chooseBird(1)  
+  chooseBird(1)
   document.getElementById("username").focus();
 }
 
-function chooseBird(id){
+function chooseBird(id) {
   birdID = id;
-  for(var i = 1; i < 5; i++){
-    if(id == i){
-      document.getElementsByClassName("choose_bird")[i-1].style.background = "white";
+  for (var i = 1; i < 5; i++) {
+    if (id == i) {
+      document.getElementsByClassName("choose_bird")[i - 1].style.background = "white";
     } else {
-      document.getElementsByClassName("choose_bird")[i-1].style.background = "";
+      document.getElementsByClassName("choose_bird")[i - 1].style.background = "";
     }
   }
 }
@@ -404,7 +404,7 @@ function addChatMessage(message) {
     prefix.color = "#ffffff";
   }
 
-  chatWindow.innerHTML += '<div class="chat-message" color="red"><span class="prefix" color="' + prefix.color + '">' + prefix.title + '</span><span class="chat-username">' + message.username + ':</span><span class="chat-message-only">' + message.message + '</span></div>';
+  chatWindow.innerHTML += '<div class="chat-message"><span class="prefix" color="' + prefix.color + '">' + prefix.title + '</span><span class="chat-username">' + message.username + ':</span><span class="chat-message-only">' + message.message + '</span></div>';
 
 
   chatWindow.scrollTop = chatWindow.scrollHeight;
@@ -440,21 +440,21 @@ function toggleBackpack() {
   }
 }
 
-function testEase(){
-  for(var i = 0; i < 1; i+=0.1){
+function testEase() {
+  for (var i = 0; i < 1; i += 0.1) {
     console.log(ease(i).toFixed(1));
   }
 }
 
 function ease(distance) {
   var speed = 1;
-  if(distance < 0.5){
+  if (distance < 0.5) {
     speed *= distance;
   } else {
     speed *= 1 - distance;
   }
-  if(speed <= 0) speed = 0.1;
-  return speed*2;
+  if (speed <= 0) speed = 0.1;
+  return speed * 2;
 }
 
 function overlayBackpack() {
@@ -466,10 +466,10 @@ function overlayBackpack() {
   var petHeight = 50;
   var petProgression = 0;
   window.petAnimationPreview = setInterval(function () {
-    
+
     /* Pet animation */
-    
-    petHeight = (Math.sin(petProgression)*20)+50;
+
+    petHeight = (Math.sin(petProgression) * 20) + 50;
     petProgression += 0.2;
 
     document.getElementById("pet_preview").style.top = petHeight + "px";
@@ -481,19 +481,19 @@ function overlayBackpack() {
   }
 }
 
-socket.on("backpack", function(data){
+socket.on("backpack", function (data) {
   var slot = 0;
-  for(var i = 0; i < data.length; i++){
-    if(data[i] != null){
+  for (var i = 0; i < data.length; i++) {
+    if (data[i] != null) {
       var item = itemsArr[i];
       var amount = data[i];
-      for(var l = 0; l < amount; l++){
+      for (var l = 0; l < amount; l++) {
         document.getElementById("backpack_slot_" + slot).innerHTML = "<img src='img/" + item.thumbnail + "' class='backpack_slot_image'>";
         slot++;
       }
     }
   }
-  
+
 })
 
 
@@ -505,18 +505,18 @@ function clearBackpack() {
 }
 
 var showingNewItem = false;
-
-socket.on("new_item", function(data){
-  console.log("GOTDEM");
-  newItemAnimation(data.item, data.amount);
+var unseenItems = [];
+socket.on("new_item", function (data) {
+  unseenItems.push(data);
+  if (!showingNewItem) newItemAnimation(data.item, data.amount);
 });
 
 function newItemAnimation(item, amount) {
   showingNewItem = true;
   var itemObj = itemsArr[item];
-  
+
   document.getElementById("new-item-tag").innerHTML = itemObj.name + "!";
-  if(amount > 1) document.getElementById("new-item-tag").innerHTML = amount + "x " + itemObj.name + "!";
+  if (amount > 1) document.getElementById("new-item-tag").innerHTML = amount + "x " + itemObj.name + "!";
   document.getElementById("item-preview-new-item").src = "img/" + itemObj.thumbnail;
   document.getElementById("new-item-background").style.transform = "scale(1)";
 }
@@ -524,7 +524,11 @@ function newItemAnimation(item, amount) {
 function clearNewItemAnimation() {
   showingNewItem = false;
   document.getElementById("new-item-background").style.transform = "scale(0)";
-
+  unseenItems.splice(0, 1);
+  setTimeout(function () {
+      if (unseenItems.length > 0) newItemAnimation(unseenItems[0].item, unseenItems[0].amount);
+    },
+    100);
 }
 
 function chatActive() {
