@@ -28,7 +28,7 @@ var worldData = new Array();
 io.on("connection", function (socket) {
 
   socket.on("signupReq", function (data) {
-    createAccount(data.username, data.pin, socket.id);
+    createAccount(data.username, data.pin, socket.id, data.skin);
   });
 
   socket.on("loginReq", function (data) {
@@ -140,6 +140,11 @@ function broadcast(message) {
   }
 }
 
+function saveThisAccount(username, account) {
+  account = JSON.stringify(account);
+  fs.writeFileSync("accounts/" + username + ".txt", account);
+}
+
 function saveAccount(username, x, y, room) {
   var account = loadAccount(username);
   if (account === false) return;
@@ -151,10 +156,65 @@ function saveAccount(username, x, y, room) {
   fs.writeFileSync("accounts/" + username + ".txt", account);
 }
 
-function giveItem(item, username, amount) {
+function giveItem(username, item, amount) {
+  username = username.toString().toLowerCase();
   if (amount == undefined) amount = 1; // Default amount to 1, usage of giveItem only requires item id and username.
   var account = loadAccount(username);
+  if (account.inventory[item] == null) account.inventory[item] = 0;
   account.inventory[item] += 1;
+
+  if (userOnline(username)) {
+    alertNewItem(username, item, amount);
+  } else {
+    account.unseenItems.push({
+      item: item,
+      amount: amount
+    });
+  }
+  saveThisAccount(username, account);
+}
+
+function alertNewItem(username, item, amount) {
+  var socket = usernameToSocket(username);
+  io.sockets.connected[socket].emit("new_item", {
+    item: item,
+    amount: amount
+  });
+  seenItem(username, item);
+}
+
+function seenItem(username, item) {
+  /* Removes an item from users */
+  var account = loadAccount(username);
+  for (var i = 0; i < account.unseenItems; i++) {
+    if (account.unseenItems[i].item == item) {
+      console.log("FOUND AN ITEM");
+      account.unseenItems.splice(i, 1);
+      
+    }
+  }
+  saveThisAccount(username, account);
+}
+
+function userOnline(username) {
+  username = username.toLowerCase();
+  for (var i = 0; i < loggedInUsers.length; i++) {
+    if (loggedInUsers[i].username === username) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function usernameToSocket(username) {
+  username = username.toLowerCase();
+  /* Get the current socket id from a logged in user by the username */
+  for (var i = 0; i < loggedInUsers.length; i++) {
+    if (loggedInUsers[i].username === username) {
+      return loggedInUsers[i].socket;
+    }
+  }
+  return false;
 }
 
 function loginAccount(username, pin, socket) {
@@ -214,6 +274,13 @@ function loginAccount(username, pin, socket) {
       y: account.lastY,
       room: account.lastRoom
     }); // Load user into the world.
+
+    if (account.unseenItems.length > 0) {
+      for (var i = 0; i < account.unseenItems.length; i++) {
+        alertNewItem(account.username, account.unseenItems[i].item, account.unseenItems[i].amount);
+      }
+    }
+
     return;
 
   } else {
@@ -222,7 +289,9 @@ function loginAccount(username, pin, socket) {
   }
 }
 
-function createAccount(username, pin, socket) {
+
+
+function createAccount(username, pin, socket, skin) {
   var orgUsername = username;
   username = username.toLowerCase(); // Store usernames for login as lowercase, but save original username for displaying ingame.
   var validation = validateAccount(username, pin);
@@ -232,8 +301,6 @@ function createAccount(username, pin, socket) {
   }
   /* Account is clear to be created. */
 
-  /* TODO Skin selection, temp fix random skin */
-  var skin = Math.floor(Math.random() * 3) + 1;
   var newAccTemplate = JSON.stringify({
     username: username,
     pin: pin,
@@ -241,8 +308,9 @@ function createAccount(username, pin, socket) {
     joinedDate: Date.now(),
     lastX: 340,
     lastY: 210,
-    inventory: [],
-    unseenItems: [],
+    inventory: new Array(),
+    equipt: new Array(),
+    unseenItems: new Array(),
     skin: skin,
     authority: 0,
     condition: "good",
@@ -252,7 +320,7 @@ function createAccount(username, pin, socket) {
   io.sockets.connected[socket].emit("err", "<span style='color:#53ed55'>Success! You are now a member of the Bird Club. <a href='javascript:showLogin()'>You can now login</a></span>");
   // Account has been created.
   console.log(username + " has joined us! (New User)");
-  giveItem(username, 1) // Give new Users the Red Pet
+  giveItem(username, 1, 1) // Give new Users the Red Pet
 }
 
 function validateAccount(username, pin) {

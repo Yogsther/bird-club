@@ -1,30 +1,30 @@
-a:link{
-    color: #f94572;
-    text-decoration: none;
+a:link {
+  color: #f94572;
+  text-decoration: none;
 }
 
-a:visited{
-    color: #f94572;
-    text-decoration: none;
+a:visited {
+  color: #f94572;
+  text-decoration: none;
 }
 
-a:hover{ 
-    color: #ff6b8f;
-    text-decoration: none;
+a:hover {
+  color: #ff6b8f;
+  text-decoration: none;
 }
 
 * {
-   cursor: url(img/cursor.png) 14 0, auto;
+  cursor: url(img/cursor.png) 14 0, auto;
 }
 
-body{
+body {
   background: #111;
   /* Text defaults */
   font-family: 'Muli', sans-serif;
   color: white;
 }
 
-#wrap{
+#wrap {
   width: 960px;
   margin: 0 auto;
   position: relative;
@@ -32,22 +32,23 @@ body{
   height: 900px;
 }
 
-#logo_header{
+#logo_header {
   height: 70px;
 }
 
-#canvas{
+#canvas {
   position: relative;
   display: block;
   margin: 0 auto;
   border-radius: 5px;
   z-index: 10;
-  
+
 }
 
 
 
-.nodrag, img{
+.nodrag,
+img {
   /* Make image undraggable */
   user-drag: none;
   user-select: none;
@@ -57,21 +58,23 @@ body{
   -ms-user-select: none;
 }
 
-h4{
+h4 {
   margin: 0px;
 }
 
 /* Overlay login */
-#backdrop{
-  height:100vh;
+
+#backdrop {
+  height: 100vh;
   width: 100%;
   position: absolute;
   top: 0px;
   left: 0px;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0, 0, 0, 0.8);
   z-index: 100;
 }
-#overlay{
+
+#overlay {
   position: relative;
   margin: 0 auto;
   display: block;
@@ -79,29 +82,30 @@ h4{
   top: 20px;
 }
 
-input[type="checkbox"]{
+input[type="checkbox"] {
   position: relative;
   top: 3px;
   transform: scale(1.5);
 }
 
-input[type="text"], input[type="password"]{
+input[type="text"],
+input[type="password"] {
   height: 30px;
   border-radius: 5px;
   border: none;
   padding: 5px;
   font-weight: 600;
-  box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
   margin-top: 6px;
   margin-bottom: 6px;
 }
 
-button{
+button {
   min-width: 100px;
   border-radius: 5px;
   height: 40px;
   padding: 5px;
-  box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
   margin-top: 6px;
   margin-bottom: 6px;
   background: #cc3960;
@@ -111,49 +115,63 @@ button{
   transition: transform 0.05s, background 0.05s;
 }
 
-button:hover{
+button:hover {
   transform: scale(1.05);
 }
-button:active{
+
+button:active {
   transform: scale(0.95);
 }
 
-button, input:focus {outline:0;}
+button,
+input:focus {
+  outline: 0;
+}
 
 /* Stolen from overstacked */
+
 .noselect {
-  -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
-       -moz-user-select: none; /* Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  -webkit-user-select: none;
+  /* Safari */
+  -khtml-user-select: none;
+  /* Konqueror HTML */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
 }
 
-#insert-status{
+#insert-status {
   position: absolute;
   bottom: 20px;
   right: 20px;
-  
+
 }
-#under-bar{
+
+#under-bar {
   position: relative;
   top: 5px;
   width: 95%;
   margin: 0 auto;
   z-index: 10;
 }
-#online-status{
+
+#online-status {
   height: 20px;
   width: 20px;
   display: inline-block;
   border-radius: 20px;
-  background: #f44242; 
+  background: #f44242;
   top: 4px;
   position: relative;
 }
-#drop-down{
+
+#drop-down {
   height: 20px;
   top: 10px;
   position: relative;
@@ -161,7 +179,7 @@ button, input:focus {outline:0;}
 
 /* Chat log */
 
-#chat-log{
+#chat-log {
   height: 310px;
   border-radius: 0px 0px 10px 10px;
   background: black;
@@ -169,7 +187,7 @@ button, input:focus {outline:0;}
   top: -30px;
 }
 
-#chat-window{
+#chat-window {
   height: 190px;
   background: #111;
   top: 45px;
@@ -181,7 +199,7 @@ button, input:focus {outline:0;}
   overflow-x: hidden;
 }
 
-#chat-input{
+#chat-input {
   position: absolute;
   width: 576.6px;
   left: 20px;
@@ -195,7 +213,7 @@ button, input:focus {outline:0;}
   font-weight: 100;
 }
 
-#command-tips{
+#command-tips {
   position: absolute;
   width: 376.6px;
   left: 20px;
@@ -209,7 +227,7 @@ button, input:focus {outline:0;}
   overflow-x: hidden;
 }
 
-#friends-window{
+#friends-window {
   height: 200px;
   background: #111;
   display: inline-block;
@@ -230,10 +248,12 @@ button, input:focus {outline:0;}
   height: 4px;
 
 }
+
 ::-webkit-scrollbar-button {
   width: 0px;
   height: 0px;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #e1e1e1;
   border: 0px none #ffffff;
@@ -241,51 +261,56 @@ button, input:focus {outline:0;}
 }
 
 ::-webkit-scrollbar-track {
-    
+
   background: #666666;
   border: 0px none #ffffff;
   border-radius: 50px;
 }
+
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
 
 ::-webkit-scrollbar {
-    cursor: url(img/cursor.png) 14 0, auto;
+  cursor: url(img/cursor.png) 14 0, auto;
 }
 
 
-.chat-message{
+.chat-message {
   padding: 6px;
   padding-bottom: 8px;
-  box-shadow: 0px 2px 2px rgba(0,0,0,0.4);
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.4);
 }
-.prefix{
+
+.prefix {
   padding-right: 4px;
 }
-.chat-message-only{
+
+.chat-message-only {
   padding-left: 4px;
 }
 
 /* Hotbar (inventory toggle and more )*/
 
-
-#inventory-toggle{
+#inventory-toggle {
   position: relative;
   float: right;
   margin-right: 37px;
   top: 2px;
 }
-.backpack{
+
+.backpack {
   height: 40px;
   position: absolute;
   top: -10px;
 }
+
 /* Backpack overlay */
-#backpack{
+
+#backpack {
   height: 540px;
   width: 960px;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0, 0, 0, 0.8);
   position: absolute;
   top: 74px;
   left: 0px;
@@ -293,25 +318,25 @@ button, input:focus {outline:0;}
   z-index: 100;
 }
 
-#bird-preview{
+#bird-preview {
   height: 350px;
   top: 90px;
   right: 20px;
   position: absolute;
 }
 
-#backpack-grid{
+#backpack-grid {
   height: 460px;
   width: 440px;
   margin-left: 30px;
   top: 40px;
   position: relative;
   border-radius: 5px;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   overflow-y: auto;
 }
 
-.item-slot{
+.item-slot {
   height: 70px;
   width: 70px;
   margin: 8px;
@@ -319,24 +344,24 @@ button, input:focus {outline:0;}
   border-radius: 5px;
   position: relative;
   background: #fc535391;
-  
+
 }
 
-#pet_preview{
+#pet_preview {
   position: absolute;
   height: 150px;
   right: 300px;
   top: 50px;
 }
 
-.item-preview{
+.item-preview {
   height: 70px;
   position: absolute;
   top: 0px;
   left: 0px;
 }
 
-#new-item-background{
+#new-item-background {
   height: 270px;
   width: 400px;
   background: #DB3E4A;
@@ -349,11 +374,11 @@ button, input:focus {outline:0;}
   transform: scale(0);
 }
 
-.open-item{
+.open-item {
   transform: scale(1);
 }
 
-#ok-button{
+#ok-button {
   position: absolute;
   bottom: 20px;
   right: 20px;
@@ -361,14 +386,14 @@ button, input:focus {outline:0;}
   color: black;
 }
 
-#new-item-banner{
+#new-item-banner {
   position: relative;
   margin: 0 auto;
   display: block;
   top: -118px;
 }
 
-#item-preview-new-item{
+#item-preview-new-item {
   height: 150px;
   position: relative;
   margin: 0 auto;
@@ -376,17 +401,17 @@ button, input:focus {outline:0;}
   bottom: 90px;
 }
 
-#new-item-background-two{
+#new-item-background-two {
   height: 200px;
   width: 100%;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   position: absolute;
   bottom: 0px;
   left: 0px;
   border-radius: 5px;
 }
 
-#new-item-tag{
+#new-item-tag {
   position: relative;
   margin: 0 auto;
   display: block;
@@ -395,6 +420,26 @@ button, input:focus {outline:0;}
   font-family: Ubuntu;
 }
 
+#choose_bird {
+  height: 40px;
+  width: 178px;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.4);
+  margin-bottom: -20px;
+}
 
+.choose_bird {
+  height: 40px;
+  border-radius: 5px;
+  transition: transform 0.05s;
+  margin-left: 2.2px;
+  margin-right: 2.2px;
+}
 
+.choose_bird:hover {
+  transform: scale(1.05);
+}
 
+.choose_bird:active {
+  transform: scale(0.95);
+}

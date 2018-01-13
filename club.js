@@ -292,7 +292,8 @@ function signup() {
 
   socket.emit("signupReq", {
     username: username,
-    pin: pin
+    pin: pin,
+    skin: birdID
   });
 
 }
@@ -348,10 +349,27 @@ function clearOverlay() {
 
 
 function showSignup() {
-  document.getElementById("overlay-insert").innerHTML = '<div id="backdrop"> <div id="overlay"> <br> <h4>Sign up to Bird Club™ Pre Alpha</h4><br> <a href="javascript:showLogin()">Already a member?</a><br><br> Username:<br> <input id="username" placeholder="Username" type="text"><br> Pin (password):<br> <input id="pin" placeholder="123456" type="password"><br> <button class="btn" onclick="signup()">Become a member!</button> <div id="err_message"></div> </div></div>';
+  window.birdID = 1;
+  document.getElementById("overlay-insert").innerHTML = '<div id="backdrop"> <div id="overlay"> <br> <h4>Sign up to Bird Club™ Pre Alpha</h4><br> <a href="javascript:showLogin()">Already a member?</a><br><br> Username:<br> <input id="username" placeholder="Username" type="text"><br> Pin (password):<br> <input id="pin" placeholder="123456" type="password"><br><div id="choose_bird"></div><br><button class="btn" onclick="signup()">Become a member!</button> <div id="err_message"></div> </div></div>';
   showingSignup = true;
   showingLogin = false;
+  for(var i = 1; i < 5; i++){
+    // Do 4 times
+    document.getElementById("choose_bird").innerHTML += '<img class="choose_bird" src="img/bird_' + i + '.png" onclick="chooseBird(' + i + ')">';
+  }
+  chooseBird(1)  
   document.getElementById("username").focus();
+}
+
+function chooseBird(id){
+  birdID = id;
+  for(var i = 1; i < 5; i++){
+    if(id == i){
+      document.getElementsByClassName("choose_bird")[i-1].style.background = "white";
+    } else {
+      document.getElementsByClassName("choose_bird")[i-1].style.background = "";
+    }
+  }
 }
 
 function showLogin() {
@@ -472,7 +490,11 @@ function clearBackpack() {
 
 var showingNewItem = false;
 
-function newItemAnimation() {
+socket.on("new_item", function(data){
+  newItemAnimation(data.item, data.amount);
+});
+
+function newItemAnimation(item, amount) {
   showingNewItem = true;
   document.getElementById("new-item-background").style.transform = "scale(1)";
 }
@@ -480,6 +502,7 @@ function newItemAnimation() {
 function clearNewItemAnimation() {
   showingNewItem = false;
   document.getElementById("new-item-background").style.transform = "scale(0)";
+
 }
 
 function chatActive() {
