@@ -443,3 +443,15 @@ input:focus {
 .choose_bird:active {
   transform: scale(0.95);
 }
+
+.backpack_slot_image{
+  position: absolute;
+  height: 70px;
+  transition: transform 0.05s;
+}
+.backpack_slot_image:hover{
+    transform: scale(1.1);
+}
+.backpack_slot_image:active{
+    transform: scale(0.95);
+}

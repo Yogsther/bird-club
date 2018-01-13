@@ -458,8 +458,9 @@ function ease(distance) {
 }
 
 function overlayBackpack() {
+  socket.emit("req_backpack", account.username);
   document.getElementById("backpack-icon").src = "img/backpack_open.png";
-  var backpack = '<div id="backpack" class="noselect"> <img src="img/pet_1.png" id="pet_preview"><img src="img/bird_' + account.skin + '.png" id="bird-preview" class="nodrag"><div id="backpack-grid">  </div></div>';
+  var backpack = '<div id="backpack" class="noselect"> <img src="img/pet_1.png" id="pet_preview"><img src="img/bird_' + account.skin + '.png" id="bird-preview"><div id="backpack-grid">  </div></div>';
 
   // TODO Insert inventory <img class="item-preview" src="">
   var petHeight = 50;
@@ -480,6 +481,21 @@ function overlayBackpack() {
   }
 }
 
+socket.on("backpack", function(data){
+  var slot = 0;
+  for(var i = 0; i < data.length; i++){
+    if(data[i] != null){
+      var item = itemsArr[i];
+      var amount = data[i];
+      for(var l = 0; l < amount; l++){
+        document.getElementById("backpack_slot_" + slot).innerHTML = "<img src='img/" + item.thumbnail + "' class='backpack_slot_image'>";
+        slot++;
+      }
+    }
+  }
+  
+})
+
 
 
 function clearBackpack() {
@@ -491,11 +507,17 @@ function clearBackpack() {
 var showingNewItem = false;
 
 socket.on("new_item", function(data){
+  console.log("GOTDEM");
   newItemAnimation(data.item, data.amount);
 });
 
 function newItemAnimation(item, amount) {
   showingNewItem = true;
+  var itemObj = itemsArr[item];
+  
+  document.getElementById("new-item-tag").innerHTML = itemObj.name + "!";
+  if(amount > 1) document.getElementById("new-item-tag").innerHTML = amount + "x " + itemObj.name + "!";
+  document.getElementById("item-preview-new-item").src = "img/" + itemObj.thumbnail;
   document.getElementById("new-item-background").style.transform = "scale(1)";
 }
 
