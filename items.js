@@ -9,8 +9,8 @@ const items = [
   }, {
     index: 2,
     name: "Evil Bird",
-    thumbnail: "evil_bird.png",
-    texture: "evil_bird.png",
+    thumbnail: "bird_20.png",
+    texture: "bird_20.png",
     rarity: 4,
     type: "skin"
   }

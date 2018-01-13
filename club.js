@@ -391,10 +391,10 @@ function loadChat(chat) {
 function addChatMessage(message) {
   var chatWindow = document.getElementById("chat-window");
   var prefix = {
-    title: "",
-    color: "white"
+    title: "[BIRD]",
+    color: "#c6c6c6"
   };
-
+  
   if (message.authority > 0) {
     prefix.title = "[MOD]"
     prefix.color = "#f44b42";
@@ -404,7 +404,7 @@ function addChatMessage(message) {
     prefix.color = "#ffffff";
   }
 
-  chatWindow.innerHTML += '<div class="chat-message"><span class="prefix" color="' + prefix.color + '">' + prefix.title + '</span><span class="chat-username">' + message.username + ':</span><span class="chat-message-only">' + message.message + '</span></div>';
+  chatWindow.innerHTML += '<div class="chat-message"><span class="prefix" style="color:' + prefix.color + '">' + prefix.title + '</span><span class="chat-username">' + message.username + ':</span><span class="chat-message-only">' + message.message + '</span></div>';
 
 
   chatWindow.scrollTop = chatWindow.scrollHeight;
