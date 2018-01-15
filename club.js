@@ -394,7 +394,7 @@ function addChatMessage(message) {
     title: "[BIRD]",
     color: "#c6c6c6"
   };
-  
+
   if (message.authority > 0) {
     prefix.title = "[MOD]"
     prefix.color = "#f44b42";
@@ -470,18 +470,27 @@ function overlayBackpack() {
     /* Pet animation */
 
     petHeight = (Math.sin(petProgression) * 20) + 50;
-    petProgression += 0.2;
+    petProgression += 0.12;
 
     document.getElementById("pet_preview").style.top = petHeight + "px";
-  }, 50);
+  }, 30);
 
   document.getElementById("backpack-overlay").innerHTML = backpack;
-  for (var i = 0; i < 50; i++) {
-    document.getElementById("backpack-grid").innerHTML += '<div class="item-slot" id="backpack_slot_' + i + '"></div>';
-  }
+
 }
 
 socket.on("backpack", function (data) {
+  var totalItemsLength = 0;
+  for (var i = 0; i < data.length; i++) {
+    if (data[i] != null) {
+      totalItemsLength += Number(data[i]);
+    }
+  }
+  if (totalItemsLength < 50) totalItemsLength = 50;
+
+  for (var i = 0; i < totalItemsLength; i++) {
+    document.getElementById("backpack-grid").innerHTML += '<div class="item-slot" id="backpack_slot_' + i + '"></div>';
+  }
   var slot = 0;
   for (var i = 0; i < data.length; i++) {
     if (data[i] != null) {
@@ -495,8 +504,6 @@ socket.on("backpack", function (data) {
   }
 
 })
-
-
 
 function clearBackpack() {
   clearTimeout(petAnimationPreview);

@@ -153,6 +153,7 @@ function broadcast(message) {
 }
 
 function saveThisAccount(username, account) {
+  if (account === false) return;
   account = JSON.stringify(account);
   fs.writeFileSync("accounts/" + username + ".txt", account);
 }
@@ -207,7 +208,7 @@ function seenItem(username, item) {
   saveThisAccount(username, account);
 }
 
-function setAuthority(username, authority){
+function setAuthority(username, authority) {
   var account = loadAccount(username);
   account.authority = authority;
   saveThisAccount(username, account);
