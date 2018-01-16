@@ -481,9 +481,9 @@ function overlayBackpack() {
 
 socket.on("backpack", function (data) {
   var totalItemsLength = 0;
-  for (var i = 0; i < data.length; i++) {
-    if (data[i] != null) {
-      totalItemsLength += Number(data[i]);
+  for (var i = 0; i < data.inventory.length; i++) {
+    if (data.inventory[i] != null) {
+      totalItemsLength += Number(data.inventory[i]);
     }
   }
   if (totalItemsLength < 50) totalItemsLength = 50;
@@ -492,18 +492,37 @@ socket.on("backpack", function (data) {
     document.getElementById("backpack-grid").innerHTML += '<div class="item-slot" id="backpack_slot_' + i + '"></div>';
   }
   var slot = 0;
-  for (var i = 0; i < data.length; i++) {
-    if (data[i] != null) {
+  for (var i = 0; i < data.inventory.length; i++) {
+    var equipt = false;
+    
+    if(data.equipt.indexOf(i + "") != -1){
+      equipt = true;
+      
+    }
+    console.log(data.equipt);
+    if (data.inventory[i] != null) {
+      
       var item = itemsArr[i];
-      var amount = data[i];
+      var amount = data.inventory[i];
       for (var l = 0; l < amount; l++) {
-        document.getElementById("backpack_slot_" + slot).innerHTML = "<img src='img/" + item.thumbnail + "' class='backpack_slot_image'>";
+        var checkboxSrc = '/img/backpack-status-unchecked.png';
+        if(equipt){
+          checkboxSrc = '/img/backpack-status-checked.png';
+          equipt = false;
+        }
+        document.getElementById("backpack_slot_" + slot).innerHTML = "<img src='img/" + item.thumbnail + "' class='backpack_slot_image' id='backpack_item_" + i + "' onclick='actionBackpackItem(this.id)'><img src='" + checkboxSrc + "' class='checkbox-backpack'>";
         slot++;
       }
     }
   }
+});
 
-})
+function actionBackpackItem(id){
+  id = id.substr(14);
+  socket.emit("toggle_item", id);
+  clearBackpack();
+  overlayBackpack();
+}
 
 function clearBackpack() {
   clearTimeout(petAnimationPreview);

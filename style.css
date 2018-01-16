@@ -318,6 +318,14 @@ input:focus {
   z-index: 100;
 }
 
+.checkbox-backpack{
+  height: 40px;
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  pointer-events: none;
+}
+
 #bird-preview {
   height: 350px;
   top: 90px;

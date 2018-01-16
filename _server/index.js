@@ -125,10 +125,34 @@ io.on("connection", function (socket) {
 
   socket.on("req_backpack", function (username) {
     var account = loadAccount(username);
-    io.sockets.connected[socket.id].emit("backpack", account.inventory);
+    io.sockets.connected[socket.id].emit("backpack", {
+      inventory: account.inventory,
+      equipt: account.equipt
+    });
   });
 
+  
+  socket.on("toggle_item", function(id) {
+    var account = loadAccount(socketToUsername(socket.id));
+    if(account.inventory[id] != null){
+      // User has the item in it's inventory.
+      if(account.equipt.indexOf(id) == -1){
+        account.equipt.push(id); // Equipted the item.
+      } else {
+        for(var i = 0; i < account.equipt.length; i++){
+          if(account.equipt[i] == id){
+            account.equipt.splice(i, 1); // Unequipted the item.
+          }
+        }
+      }
+      saveThisAccount(account);
+    }
+    
+  });
+  
+  
   /* END OF SOCKET */
+  
 
 });
 
@@ -152,8 +176,9 @@ function broadcast(message) {
   }
 }
 
-function saveThisAccount(username, account) {
+function saveThisAccount(account) {
   if (account === false) return;
+  var username = account.username;
   account = JSON.stringify(account);
   fs.writeFileSync("accounts/" + username + ".txt", account);
 }
@@ -185,7 +210,7 @@ function giveItem(username, item, amount) {
       amount: amount
     });
   }
-  saveThisAccount(username, account);
+  saveThisAccount(account);
 }
 
 function alertNewItem(username, item, amount) {
@@ -205,13 +230,13 @@ function seenItem(username, item) {
       account.unseenItems.splice(i, 1);
     }
   }
-  saveThisAccount(username, account);
+  saveThisAccount(account);
 }
 
 function setAuthority(username, authority) {
   var account = loadAccount(username);
   account.authority = authority;
-  saveThisAccount(username, account);
+  saveThisAccount(account);
 }
 
 function userOnline(username) {
@@ -230,6 +255,15 @@ function usernameToSocket(username) {
   for (var i = 0; i < loggedInUsers.length; i++) {
     if (loggedInUsers[i].username === username) {
       return loggedInUsers[i].socket;
+    }
+  }
+  return false;
+}
+
+function socketToUsername(socket) {
+  for (var i = 0; i < loggedInUsers.length; i++) {
+    if (loggedInUsers[i].socket === socket) {
+      return loggedInUsers[i].username;
     }
   }
   return false;
