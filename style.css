@@ -319,7 +319,7 @@ input:focus {
 }
 
 .checkbox-backpack{
-  height: 40px;
+  height: 26px;
   position: absolute;
   right: 0px;
   bottom: 0px;
@@ -340,7 +340,7 @@ input:focus {
   top: 40px;
   position: relative;
   border-radius: 5px;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.8);
   overflow-y: auto;
 }
 
@@ -351,7 +351,7 @@ input:focus {
   display: inline-block;
   border-radius: 5px;
   position: relative;
-  background: #fc535391;
+  background: rgba(170, 170, 170,0.2);
 
 }
 
@@ -460,6 +460,7 @@ input:focus {
 .backpack_slot_image:hover{
     transform: scale(1.1);
 }
+
 .backpack_slot_image:active{
     transform: scale(0.95);
 }

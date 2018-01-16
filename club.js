@@ -494,22 +494,35 @@ socket.on("backpack", function (data) {
   var slot = 0;
   for (var i = 0; i < data.inventory.length; i++) {
     var equipt = false;
-    
-    if(data.equipt.indexOf(i + "") != -1){
+
+    if (data.equipt.indexOf(i + "") != -1) {
       equipt = true;
-      
+
     }
-    console.log(data.equipt);
     if (data.inventory[i] != null) {
-      
+
       var item = itemsArr[i];
       var amount = data.inventory[i];
       for (var l = 0; l < amount; l++) {
         var checkboxSrc = '/img/backpack-status-unchecked.png';
-        if(equipt){
+        if (equipt) {
           checkboxSrc = '/img/backpack-status-checked.png';
           equipt = false;
         }
+        var rarityColor = 'rgba(170, 170, 170,0.2)';
+        if (item.rarity === 1) {
+          rarityColor = 'rgba(173, 173, 173, 1)';
+        } else if (item.rarity === 2) {
+          rarityColor = '#448e45';
+        } else if (item.rarity === 3) {
+          rarityColor = '#3a6c99';
+        } else if (item.rarity === 4) {
+          rarityColor = '#b54148';
+        } else if (item.rarity === 5) {
+          rarityColor = '#f7c23b';
+        }
+
+        document.getElementById('backpack_slot_' + slot).style.background = rarityColor;
         document.getElementById("backpack_slot_" + slot).innerHTML = "<img src='img/" + item.thumbnail + "' class='backpack_slot_image' id='backpack_item_" + i + "' onclick='actionBackpackItem(this.id)'><img src='" + checkboxSrc + "' class='checkbox-backpack'>";
         slot++;
       }
@@ -517,7 +530,7 @@ socket.on("backpack", function (data) {
   }
 });
 
-function actionBackpackItem(id){
+function actionBackpackItem(id) {
   id = id.substr(14);
   socket.emit("toggle_item", id);
   clearBackpack();
@@ -540,8 +553,9 @@ socket.on("new_item", function (data) {
 function newItemAnimation(item, amount) {
   showingNewItem = true;
   var itemObj = itemsArr[item];
-
   document.getElementById("new-item-tag").innerHTML = itemObj.name + "!";
+
+
   if (amount > 1) document.getElementById("new-item-tag").innerHTML = amount + "x " + itemObj.name + "!";
   document.getElementById("item-preview-new-item").src = "img/" + itemObj.thumbnail;
   document.getElementById("new-item-background").style.transform = "scale(1)";

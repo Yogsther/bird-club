@@ -4,7 +4,7 @@ const items = [
     name: "Red Bird Pet",
     thumbnail: "pet_1.png",
     texture: "pet_1.png",
-    rarity: 1,
+    rarity: 2,
     type: "pet"
   }, {
     index: 2,
@@ -16,6 +16,11 @@ const items = [
   }
 ];
 
+/*,{
+  index: 3,
+  name: "Evil Bird Pet",
+    thumbnai
+}*/
 var itemsArr = new Array();
 
 for (var i = 0; i < items.length; i++) {
