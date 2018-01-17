@@ -404,7 +404,7 @@ function addChatMessage(message) {
     prefix.color = "#ffffff";
   }
 
-  chatWindow.innerHTML += '<div class="chat-message"><span class="prefix" style="color:' + prefix.color + '">' + prefix.title + '</span><span class="chat-username">' + message.username + ':</span><span class="chat-message-only">' + message.message + '</span></div>';
+  chatWindow.innerHTML += '<div class="chat-message"><span class="prefix" style="color:' + prefix.color + '">' + prefix.title + '</span><span class="chat-username" style="color:rgba(255,255,255,0.7)">' + message.username + ':</span><span class="chat-message-only">' + message.message + '</span></div>';
 
 
   chatWindow.scrollTop = chatWindow.scrollHeight;

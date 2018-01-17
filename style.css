@@ -22,6 +22,8 @@ body {
   /* Text defaults */
   font-family: 'Muli', sans-serif;
   color: white;
+  top: 24px;
+  position: relative;
 }
 
 #wrap {
@@ -33,7 +35,9 @@ body {
 }
 
 #logo_header {
-  height: 70px;
+  width: 150px;
+  position: absolute;
+  left: -150px;
 }
 
 #canvas {
@@ -312,7 +316,7 @@ input:focus {
   width: 960px;
   background: rgba(0, 0, 0, 0.8);
   position: absolute;
-  top: 74px;
+  top: 0px;
   left: 0px;
   border-radius: 5px;
   z-index: 100;
@@ -374,7 +378,7 @@ input:focus {
   width: 400px;
   background: #DB3E4A;
   position: absolute;
-  top: 200px;
+  top: 120px;
   left: 280px;
   border-radius: 5px;
   z-index: 100;

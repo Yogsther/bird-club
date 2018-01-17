@@ -324,7 +324,9 @@ function loginAccount(username, pin, socket) {
       skin: account.skin,
       x: account.lastX,
       y: account.lastY,
-      room: account.lastRoom
+      room: account.lastRoom,
+      pet_x: 0,
+      pet_y: 0
     }); // Load user into the world.
 
     if (account.unseenItems.length > 0) {
